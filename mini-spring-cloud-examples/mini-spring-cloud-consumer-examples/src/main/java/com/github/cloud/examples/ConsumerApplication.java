@@ -33,6 +33,9 @@ public class ConsumerApplication {
 
         @GetMapping("/hello")
         public String hello() {
+            /*
+                此处的逻辑非常简化，就是向tutuServer查所有指定的服务实例，然后取查到的列表中的第一项，取出其url然后发起http请求
+             */
             List<ServiceInstance> serviceInstances = discoveryClient.getInstances("provider-application");
             if (serviceInstances.size() > 0) {
                 ServiceInstance serviceInstance = serviceInstances.get(0);

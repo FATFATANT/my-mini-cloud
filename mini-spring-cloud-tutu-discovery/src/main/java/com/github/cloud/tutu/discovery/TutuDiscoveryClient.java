@@ -37,6 +37,7 @@ public class TutuDiscoveryClient implements DiscoveryClient {
 
         String response = HttpUtil.get(tutuDiscoveryProperties.getServerAddr() + "/list", param);
         logger.info("query service instance, serviceId: {}, response: {}", serviceId, response);
+        // 注意在tutu-server中返回的Set的成员是自定义封装的Server对象，这里是拆出来然后封装进TutuServiceInstance
         return JSON.parseArray(response).stream().map(hostInfo -> {
             TutuServiceInstance serviceInstance = new TutuServiceInstance();
             serviceInstance.setServiceId(serviceId);
