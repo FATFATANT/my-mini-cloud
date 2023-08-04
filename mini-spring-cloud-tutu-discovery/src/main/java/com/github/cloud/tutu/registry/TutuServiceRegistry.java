@@ -26,17 +26,17 @@ public class TutuServiceRegistry implements ServiceRegistry<Registration> {
     }
 
     /**
-     * 注册服务实例
-     *
+     * 注册服务实例，这里是TutuAutoServiceRegistration的父类调用的方法
+     * registry是注册者，registration是注册信息，不过在这个方法中是一点都没用到，因为这个类本身也读取了配置文件
      * @param registration
      */
     @Override
     public void register(Registration registration) {
         Map<String, Object> param = new HashMap<>();
-        param.put("serviceName", tutuDiscoveryProperties.getService());
+        param.put("serviceName", tutuDiscoveryProperties.getService());  // 从配置文件中读值
         param.put("ip", tutuDiscoveryProperties.getIp());
         param.put("port", tutuDiscoveryProperties.getPort());
-
+        // 返回值就是个true的字面量
         String result = HttpUtil.post(tutuDiscoveryProperties.getServerAddr() + "/register", param);
         if (Boolean.parseBoolean(result)) {
             logger.info("register service successfully, serviceName: {}, ip: {}, port: {}",

@@ -18,7 +18,7 @@ public class ProviderApplication {
     private Integer port;
 
     public static void main(String[] args) {
-        SpringApplication.run(ProviderApplication.class, args);
+        SpringApplication.run(ProviderApplication.class, args);  // 这个方法其实有返回值，不过大部分情况下也不会接收
     }
 
     @PostMapping("/echo")

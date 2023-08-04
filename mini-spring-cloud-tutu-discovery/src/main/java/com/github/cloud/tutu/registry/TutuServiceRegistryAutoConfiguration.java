@@ -19,8 +19,9 @@ import org.springframework.context.annotation.Configuration;
 public class TutuServiceRegistryAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean  // 保证这个bean只会有一个，感觉可以看成singleton另一种写法
     public TutuDiscoveryProperties tutuProperties() {
+        // 虽然没加component注解，但是采用@Bean
         return new TutuDiscoveryProperties();
     }
 

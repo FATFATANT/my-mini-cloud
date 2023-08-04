@@ -25,9 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @SpringBootApplication
 public class TutuServerApplication {
     private static Logger logger = LoggerFactory.getLogger(TutuServerApplication.class);
-
+    // 注册中心是一个server，键是服务名，值是封装起来的服务提供方的ip和端口
     private ConcurrentHashMap<String, Set<Server>> serverMap = new ConcurrentHashMap<>();
-
+    // 启动后没有触发任何的断点，说明discovery包是服务提供方会用到
     public static void main(String[] args) {
         SpringApplication.run(TutuServerApplication.class, args);
     }
@@ -40,17 +40,18 @@ public class TutuServerApplication {
      * @param port
      * @return
      */
-    @PostMapping("register")
+    @PostMapping("register")  // 服务提供方会向这里发送post请求
     public boolean register(@RequestParam("serviceName") String serviceName, @RequestParam("ip") String ip, @RequestParam("port") Integer port) {
         logger.info("register service, serviceName: {}, ip: {}, port: {}", serviceName, ip, port);
-        serverMap.putIfAbsent(serviceName.toLowerCase(), Collections.synchronizedSet(new HashSet<>()));
+        // 一个服务名对应一个服务集合，这个和后面的负载均衡相关
+        serverMap.putIfAbsent(serviceName.toLowerCase(), Collections.synchronizedSet(new HashSet<>()));  // 此处的写法，值是先弄一个空的set
         Server server = new Server(ip, port);
         serverMap.get(serviceName).add(server);
         return true;
     }
 
     /**
-     * 服务注销
+     * 服务注销，这个方法还会在服务提供方下线时触发，实现方式是在@PreDestroy方法里面
      *
      * @param serviceName
      * @param ip
@@ -63,6 +64,7 @@ public class TutuServerApplication {
         Set<Server> serverSet = serverMap.get(serviceName.toLowerCase());
         if (serverSet != null) {
             Server server = new Server(ip, port);
+            // 这里可以回顾到一个点，set删除时会根据获取的对象的哈希值来，不过我们重写了这个方法，所以只要ip和port一样那么哈希值就一样
             serverSet.remove(server);
         }
         return true;
@@ -114,11 +116,12 @@ public class TutuServerApplication {
 
         @Override
         public boolean equals(Object o) {
+            // 先比地址
             if (this == o) return true;
+            // 再比class
             if (o == null || getClass() != o.getClass()) return false;
-
             Server server = (Server) o;
-
+            // 再比字段
             if (!ip.equals(server.ip)) return false;
             return port.equals(server.port);
         }

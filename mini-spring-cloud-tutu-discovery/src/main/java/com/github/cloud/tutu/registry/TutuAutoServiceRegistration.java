@@ -23,7 +23,7 @@ public class TutuAutoServiceRegistration extends AbstractAutoServiceRegistration
     @Override
     protected Registration getRegistration() {
         if (tutuRegistration.getPort() < 0) {
-            //设置服务端口
+            // 设置服务端口，不过应该已经在前面的步骤已经设置过了
             tutuRegistration.setPort(this.getPort().get());
         }
         return tutuRegistration;
