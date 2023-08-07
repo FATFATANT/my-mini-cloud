@@ -23,6 +23,7 @@ public class RibbonClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public IClientConfig ribbonClientConfig() {
+        // 定义加载和读取ribbon客户端配置的方法
         DefaultClientConfigImpl config = new DefaultClientConfigImpl();
         config.loadProperties(name);
         return config;
@@ -31,6 +32,7 @@ public class RibbonClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public IRule ribbonRule(IClientConfig config) {
+        // 根据所属zone和可用性筛选服务实例，在没有多zone的情况下退化为轮询RoundRobinRule
         ZoneAvoidanceRule rule = new ZoneAvoidanceRule();
         rule.initWithNiwsConfig(config);
         return rule;
@@ -39,12 +41,14 @@ public class RibbonClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public IPing ribbonPing(IClientConfig config) {
+        // 不做检查，认为服务存活
         return new DummyPing();
     }
 
     @Bean
     @ConditionalOnMissingBean
     public ServerList<Server> ribbonServerList(IClientConfig config) {
+        // 这个方法由于有@ConditionalOnMissingBean这个注解，所以这个方法应该有不执行的可能
         ConfigurationBasedServerList serverList = new ConfigurationBasedServerList();
         serverList.initWithNiwsConfig(config);
         return serverList;

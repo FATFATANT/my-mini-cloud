@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
  *
  * @author derek(易仁川)
  * @date 2022/3/22
+ * 这个类通过@Bean注解实例化
  */
 public class RibbonLoadBalancerClient implements LoadBalancerClient {
 

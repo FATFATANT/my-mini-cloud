@@ -31,7 +31,7 @@ public class RibbonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(LoadBalancerClient.class)
-    public LoadBalancerClient loadBalancerClient() {
+    public LoadBalancerClient loadBalancerClient() {  // 其实可以直接形参注入的，不用调方法
         return new RibbonLoadBalancerClient(springClientFactory());
     }
 }
