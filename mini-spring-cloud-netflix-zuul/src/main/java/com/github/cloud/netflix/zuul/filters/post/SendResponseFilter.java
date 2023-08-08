@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -47,9 +48,13 @@ public class SendResponseFilter extends ZuulFilter {
 		try {
 			HttpServletResponse servletResponse = requestContext.getResponse();
 			servletResponse.setCharacterEncoding("UTF-8");
-
+			byte[] bytes = new byte[1024];
+			int len = inputStream.read(bytes);
+			String s = new String(bytes, 0, len);
+			s += " hahahahaha";
+			InputStream myStream = new ByteArrayInputStream(s.getBytes());
 			OutputStream outStream = servletResponse.getOutputStream();
-			StreamUtils.copy(inputStream, outStream);
+			StreamUtils.copy(myStream, outStream);
 		} catch (Exception e) {
 			rethrowRuntimeException(e);
 		} finally {

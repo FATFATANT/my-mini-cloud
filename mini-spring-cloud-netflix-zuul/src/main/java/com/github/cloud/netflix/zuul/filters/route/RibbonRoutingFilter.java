@@ -58,7 +58,7 @@ public class RibbonRoutingFilter extends ZuulFilter {
 				logger.error("根据serviceId查询不到服务示例，serviceId: {}", serviceId);
 				return null;
 			}
-
+			// 此处就是用负载均衡找出服务实例后直接执行了
 			String requestURI = (String) requestContext.get(REQUEST_URI_KEY);
 			String url = serviceInstance.getUri().toString() + requestURI;
 			HttpRequest httpRequest = HttpUtil.createRequest(Method.POST, url);

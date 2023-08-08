@@ -43,8 +43,11 @@ public class PreDecorationFilter extends ZuulFilter {
 	@Override
 	public Object run() throws ZuulException {
 		RequestContext requestContext = RequestContext.getCurrentContext();
-		String requestURI = requestContext.getRequest().getRequestURI();
-		//获取匹配的路由
+		String requestURI = requestContext.getRequest().getRequestURI();  // 请求路由
+		if (requestURI.equals("/favicon.ico")){
+			return null;
+		}
+		//获取匹配的路由, 注意这里匹配了所有的路径，甚至匹配了/favicon.ico，所以会报错找不到匹配的路由
 		Route route = routeLocator.getMatchingRoute(requestURI);
 		if (route != null) {
 			requestContext.put(REQUEST_URI_KEY, route.getPath());

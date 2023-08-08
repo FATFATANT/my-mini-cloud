@@ -41,6 +41,8 @@ public class ZuulServerAutoConfiguration {
 	 */
 	@Bean
 	public ServletRegistrationBean zuulServlet() {
+		// 下面这个是我们根据拦截的根路径生成Servlet，所以理论上应该网关可以有多个servlet
+		// SpringBoot中如果想要向容器中加入Servlet，就必须把这个包进ServletRegistrationBean
 		return new ServletRegistrationBean<>(new ZuulServlet(), zuulProperties.getServletPath());
 	}
 
@@ -78,9 +80,15 @@ public class ZuulServerAutoConfiguration {
 
 	/**
 	 * 注册过滤器
+	 * 此处应该是Spring会将所有的ZuulFilter实现类给扔进来
 	 */
 	@Bean
 	public FilterRegistry filterRegistry(Map<String, ZuulFilter> filterMap) {
+		/*
+			我大概懂了，就是这个返回值本身没啥用，因为放到容器中也没别人用
+			这里最关键的是第一句，因为它都写成了单例，这个是取到单例的对象然后直接在那个对象上注册所有的过滤器
+			spring在此处的用处就是能够将前面写好的ZuulFilter自动通过形参传入
+		 */
 		FilterRegistry filterRegistry = FilterRegistry.instance();
 		filterMap.forEach((name, filter) -> {
 			filterRegistry.put(name, filter);

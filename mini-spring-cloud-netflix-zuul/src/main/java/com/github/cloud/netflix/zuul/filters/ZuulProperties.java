@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ZuulProperties {
 
 	private String servletPath = "/zuul/*";
-
+	// Spring应该可以自动将yml中的嵌套键值对封装起来
 	private Map<String, ZuulRoute> routes = new LinkedHashMap<>();
 
 	public String getServletPath() {
