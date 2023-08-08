@@ -39,7 +39,7 @@ public class LoadBalancerFeignClient implements Client {
             ServiceInstance serviceInstance = loadBalancerClient.choose(serviceId);
             //重建请求URI
             URI uri = loadBalancerClient.reconstructURI(serviceInstance, original);
-
+            // 可以看到这个分支的处理没有拦截器
             Request newRequest = Request.create(request.httpMethod(), uri.toASCIIString(), new HashMap<>(),
                     request.body(), StandardCharsets.UTF_8);
             return delegate.execute(newRequest, options);

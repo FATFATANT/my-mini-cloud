@@ -41,6 +41,7 @@ public class FeignClientsConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Client client(LoadBalancerClient loadBalancerClient) {
+        // 参数中的LoadBalancerClient是在load-balancer包里面生成的
         return new LoadBalancerFeignClient(loadBalancerClient, new Client.Default(null, null));
     }
 }

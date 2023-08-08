@@ -27,11 +27,13 @@ public class SpringMvcContract extends Contract.BaseContract {
         //解析PostMapping注解
         if (annotation instanceof PostMapping) {
             PostMapping postMapping = (PostMapping) annotation;
+            // 乍一看以为下面这句话啥也没干，但其实给restTemplate加上了请求类型
             data.template().method(Request.HttpMethod.POST);
             String path = postMapping.value()[0];
             if (!path.startsWith("/") && !data.template().path().endsWith("/")) {
                 path = "/" + path;
             }
+            // 注意，就是这个类把要请求的路径给找出来了
             data.template().uri(path, true);
         }
 

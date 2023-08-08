@@ -27,12 +27,14 @@ public class FeignClientFactoryBean implements FactoryBean<Object>, ApplicationC
 
     @Override
     public Object getObject() throws Exception {
+        // 此处就和前面的Ribbon一样，每个服务对应一个容器，此处把这个容器拿出来
         FeignContext feignContext = applicationContext.getBean(FeignContext.class);
+        // 我们给这个容器注册了FeignClientsConfiguration配置类，下面就是里面对应注册的若干个bean实例
         Encoder encoder = feignContext.getInstance(contextId, Encoder.class);
         Decoder decoder = feignContext.getInstance(contextId, Decoder.class);
         Contract contract = feignContext.getInstance(contextId, Contract.class);
         Client client = feignContext.getInstance(contextId, Client.class);
-
+        // 这个东西会作为EchoService的Bean实例放入容器
         return Feign.builder()
                 .encoder(encoder)
                 .decoder(decoder)
